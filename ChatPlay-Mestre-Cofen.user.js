@@ -1,10 +1,11 @@
 // ==UserScript==
 // @name         ChatPlay Mestre Cofen
 // @namespace    chatplay.mestre.cofen
-// @version      1.0.5
+// @version      1.0.6
 // @description  Para o Cofen no ChatPlay do CRM: apresentação automática do Coren (ou pedido de CPF sem vínculo), dados do cliente com copiar, sinalizados com aviso, retomada em lote, pasta na fila, contagem por cliente e WallPaper.
 // @author       Elite Team
 // @match        https://crm.pagueplay.com.br/*
+// @match        https://crm.bookplay.com.br/*
 // @homepageURL  https://github.com/clebermitho/Chatplay-mestre-Cofen
 // @updateURL    https://raw.githubusercontent.com/clebermitho/Chatplay-mestre-Cofen/main/ChatPlay-Mestre-Cofen.user.js
 // @downloadURL  https://raw.githubusercontent.com/clebermitho/Chatplay-mestre-Cofen/main/ChatPlay-Mestre-Cofen.user.js
@@ -16,10 +17,10 @@
 // ==/UserScript==
 
 /*
- * ChatPlay Mestre Cofen 1.0.5
+ * ChatPlay Mestre Cofen 1.0.6
  * ============================
  * Sucessor do «AutoMensagem COREN» (v11, do chat antigo) para o ChatPlay do CRM
- * (crm.pagueplay.com.br/chatplay), com as ferramentas do Mestre que servem ao Cofen.
+ * (crm.pagueplay.com.br/chatplay e crm.bookplay.com.br/chatplay), com as ferramentas do Mestre que servem ao Cofen.
  *
  * O que faz:
  *   - no «Sim» de iniciar, coloca no campo (sem enviar):
@@ -42,7 +43,7 @@
 (function () {
   'use strict';
 
-  const VERSAO = '1.0.5';
+  const VERSAO = '1.0.6';
   /** Carteira desta versão: 'cofen' (crm.pagueplay.com.br) ou 'bookplay' (crm.bookplay.com.br). */
   const CARTEIRA = 'cofen';
   const NOME_CARTEIRA = 'Cofen';

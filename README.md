@@ -1,6 +1,6 @@
 # ChatPlay Mestre Cofen
 
-Extensão para o ChatPlay do CRM (crm.pagueplay.com.br/chatplay), feita para o atendimento do Cofen.
+Extensão para o ChatPlay do CRM, feita para o atendimento do Cofen. Funciona nos dois endereços: **crm.pagueplay.com.br** e **crm.bookplay.com.br** (no navegador ou no CRM instalado como aplicativo).
 
 > **Importante:** o ChatPlay é oficial e foi feito pela TI. O ChatPlay Mestre é uma **extensão à parte**,
 > que não foi feita pela TI e pode sair do ar a qualquer momento. Confira sempre a mensagem antes de enviar.
