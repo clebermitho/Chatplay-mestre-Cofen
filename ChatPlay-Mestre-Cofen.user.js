@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ChatPlay Mestre Cofen
 // @namespace    chatplay.mestre.cofen
-// @version      1.0.4
+// @version      1.0.5
 // @description  Para o Cofen no ChatPlay do CRM: apresentação automática do Coren (ou pedido de CPF sem vínculo), dados do cliente com copiar, sinalizados com aviso, retomada em lote, pasta na fila, contagem por cliente e WallPaper.
 // @author       Elite Team
 // @match        https://crm.pagueplay.com.br/*
@@ -16,7 +16,7 @@
 // ==/UserScript==
 
 /*
- * ChatPlay Mestre Cofen 1.0.4
+ * ChatPlay Mestre Cofen 1.0.5
  * ============================
  * Sucessor do «AutoMensagem COREN» (v11, do chat antigo) para o ChatPlay do CRM
  * (crm.pagueplay.com.br/chatplay), com as ferramentas do Mestre que servem ao Cofen.
@@ -42,7 +42,7 @@
 (function () {
   'use strict';
 
-  const VERSAO = '1.0.4';
+  const VERSAO = '1.0.5';
   /** Carteira desta versão: 'cofen' (crm.pagueplay.com.br) ou 'bookplay' (crm.bookplay.com.br). */
   const CARTEIRA = 'cofen';
   const NOME_CARTEIRA = 'Cofen';
@@ -1320,7 +1320,7 @@
       // Regional: pasta do cliente («Pague Coren/Coren - PA») ou canal do protocolo «(CRPA)»;
       // na falta, a pasta por onde o atendimento entrou
       const pelaFicha = corenDoCliente({ SetorDepartamento: cliente.setorDepartamento, Protocolo: cliente.protocoloCanal });
-      const pasta = nomePasta(atendimentos.get(String(id))?.departmentId);
+      const pasta = pastaDoAtt(atendimentos.get(String(id)));
       const pelaPasta = (pasta.match(/Coren\s*-?\s*([A-Z]{2})\b/) || [])[1];
       const coren = pelaFicha || (pelaPasta ? 'Coren-' + pelaPasta : null);
       // Sem vínculo: nenhum profissional ligado ao contato (sem código, sem CPF; o «nome» é o telefone)
@@ -1635,6 +1635,20 @@
   /** Pasta (departmentId → nome): /user/{id}/departments e o que o socket ensinar. */
   const pastasAprendidas = new Map(LS.ler('mestre.pastas', []));
   const nomePasta = dep => (dep == null ? '' : pastasAprendidas.get(String(dep)) || String(PASTAS[dep] || '').split('/').pop().trim());
+  /**
+   * Pasta do atendimento para MOSTRAR. O nome da pasta só vem para quem é membro dela
+   * (/user/{id}/departments); sem ele, a regional sai da sigla do canal («Crma» → «Coren - MA»),
+   * e só em último caso fica o setor genérico («Pague Coren»). Coren sempre no formato «Coren - MA».
+   */
+  function pastaDoAtt(att) {
+    const nome = nomePasta(att?.departmentId);
+    const coren = String(nome || '').match(/^\s*Coren\s*-?\s*([A-Za-z]{2})\s*$/);
+    if (coren) return 'Coren - ' + coren[1].toUpperCase();
+    if (nome) return nome;
+    const sigla = String(att?.accountAcronym || '').match(/^\s*cr([a-z]{2})\s*$/i);
+    if (sigla) return 'Coren - ' + sigla[1].toUpperCase();
+    return att?.sectorName || '';
+  }
   async function carregarPastas() {
     try {
       const lista = await chamarApi(`/user/${await usuarioId()}/departments`);
@@ -1710,7 +1724,7 @@
         const secao = secaoDaLinha(linha);
         let el = linha.querySelector('.mst-setor');
         const mostrar = att && (secao === 'aguardando' || (secao === 'andamento' && cfg.visual.setorEmAtendimento));
-        const pasta = mostrar ? nomePasta(att.departmentId) || att.sectorName || '' : '';
+        const pasta = mostrar ? pastaDoAtt(att) : '';
         const play3 = secao === 'aguardando' && !!pasta && pastaTravada(pasta);
         if (linha.hasAttribute('data-mst-play3') !== play3) linha.toggleAttribute('data-mst-play3', play3);
         if (!pasta) { el?.remove(); continue; }
@@ -2421,7 +2435,7 @@
         const ultima = a.lastUpdate ? new Date(a.lastUpdate).getTime() : NaN;
         mapa.set(String(a.id), {
           nome: (a.name || '').replace(/\s*\(\d+\)\s*$/, '').trim(),
-          pasta: nomePasta(a.departmentId) || a.sectorName || '',
+          pasta: pastaDoAtt(a),
           operador: a.usernameAttendant || '',
           ultima: Number.isFinite(ultima) ? ultima : null
         });
