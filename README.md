@@ -26,5 +26,8 @@ Deixe ligado no Tampermonkey **só um** ChatPlay Mestre.
 
 ## Atualizações
 
-As atualizações chegam sozinhas: o Tampermonkey confere este endereço uma vez por dia.
+Quando sai uma versão nova, o próprio ChatPlay Mestre mostra um card **«Nova versão do ChatPlay Mestre»** no canto da tela:
+clique em **Atualizar agora**, depois em **Atualizar** na aba que abrir, e recarregue o ChatPlay.
+
+Mesmo sem clicar, o Tampermonkey confere este endereço uma vez por dia e atualiza sozinho.
 Para buscar na hora: ícone do Tampermonkey › **Painel** › **Utilitários** › **Verificar atualizações de scripts**.
